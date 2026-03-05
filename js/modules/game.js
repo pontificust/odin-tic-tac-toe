@@ -66,7 +66,7 @@ export const game = () => {
             token = player.token
         };
 
-        function getToken(){
+        function getToken() {
             return token;
         }
 
@@ -97,10 +97,10 @@ export const game = () => {
 
         function resetGame() {
             gameBoard.resetBoard();
+            gameState.resetState();
             players.forEach(player => player.resetMoves());
             currentPlayer = players[1];
             movesCounter = 0;
-            gameState.resetState();
         }
 
         function printRound() {
@@ -112,7 +112,7 @@ export const game = () => {
             movesCounter += 1;
             const playerMoves = currentPlayer.getMoves().sort().join('');
             console.log(playerMoves)
-            if (movesCounter !== 9 && playerMoves.length === 3) {
+            if (playerMoves.length === 3) {
                 if (winCombinations.some(val => playerMoves === val)) {
                     gameState.isWin = true;
                 }
@@ -147,16 +147,44 @@ export const game = () => {
         }
 
         return { playRound, getCurrentPlayer };
-    })()
+    })();
 
-    document.addEventListener('click', () => {
-        let control = true;
-    
-        while(control){
-            let userInput = prompt("Input coordinates");
-            let [x, y] = userInput.split(' ');
-            control = game.playRound(x, y);
+    const gameRender = (() => {
+
+        function playerClickRender(e) {
+            const marker = game.getCurrentPlayer().token === 0 ? 'o' : 'x';
+            e.target.textContent = marker;
+            if(!game.playRound(e.target.dataset.x, e.target.dataset.y)){
+                setTimeout(() => {
+                    boardRender();
+                }, 5000)
+            };
         }
-    });
+
+        function boardRender() {
+            document.body.innerHTML = ''
+            const ul = document.createElement('ul');
+
+            const board = gameBoard.getBoard();
+
+            for (let i = 0; i < board.length; i += 1) {
+                for (let j = 0; j < board.length; j += 1) {
+                    const li = document.createElement('li');
+                    const button = document.createElement('button');
+                    button.dataset.x = i;
+                    button.dataset.y = j;
+                    li.appendChild(button);
+                    ul.appendChild(li);
+                }
+            }
+            document.body.appendChild(ul);
+        }
+
+        return { boardRender, playerClickRender };
+    })();
+
+    gameRender.boardRender();
+
+    document.addEventListener('click', gameRender.playerClickRender);
 
 }
