@@ -175,7 +175,14 @@ export const game = () => {
                 e.target.textContent = marker;
                 if (!game.playRound(e.target.dataset.x, e.target.dataset.y)) {
                     setTimeout(() => {
-                        boardRender();
+                        if (!document.startViewTransition) {
+                            boardRender();
+                            return;
+                        }
+
+                        document.startViewTransition(() => {
+                            boardRender();
+                        });
                     }, 5000)
                 };
             }
@@ -205,6 +212,16 @@ export const game = () => {
 
     gameRender.boardRender();
 
-    document.addEventListener('click', gameRender.playerClickRender);
+    document.addEventListener('click', (e) => {
+
+        if (!document.startViewTransition) {
+            gameRender.playerClickRender(e);
+            return;
+        }
+
+        document.startViewTransition(() => {
+            gameRender.playerClickRender(e);
+        });
+    });
 
 }

@@ -7,10 +7,30 @@
     <title>Tic-Tac-Toe</title>
 </head>
 <body>
-    <button data-id="start">Start</button>
-    <ul>
-
-    </ul>
+    <main class="main">
+        <div class="main__game-scores-wrapper">
+            <div class="main__game-score-wrapper">
+                <h2 class="main__game-player">PLAYER 1</h2>
+                <p class="main__game-score">
+                    X:<span class="main__game-score-number">0</span>
+                </p>
+            </div>
+            <button data-id="start" class="main__game-button">
+                START
+            </button>
+            <div class="main__game-score-wrapper">
+                <h2 class="main__game-player">PLAYER 2</h2>
+                <p class="main__game-score">
+                    O:<span class="main__game-score-number">0</span>
+                </p>
+            </div>
+        </div>
+        <ul main__game-cells>
+        </ul>
+        <button data-id="reset" class="main__game-button">
+            RESET GAME
+        </button>
+    </main>
     <script src="js/main.js" type="module"></script>
 </body>
 </html>
