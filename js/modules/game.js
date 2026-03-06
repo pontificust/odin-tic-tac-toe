@@ -1,13 +1,13 @@
 export const game = () => {
     const winCombinations = [
-        '012',
-        '345',
-        '678',
-        '036',
-        '147',
-        '258',
-        '048',
-        '246'
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
     ];
 
     const Player = (name, token) => {
@@ -30,7 +30,8 @@ export const game = () => {
 
 
     const gameBoard = (() => {
-        let board = Array(3).fill(Array(3).fill(Cell()));
+        let board = Array.from({ length: 3 }, () => Array.from({ length: 3 }, () => Cell()));
+        console.log(board)
 
         function getBoard() {
             return board;
@@ -42,12 +43,12 @@ export const game = () => {
         }
 
         function resetBoard() {
-            board = Array(3).fill(Array(3).fill(Cell()));
+            board = Array.from({ length: 3 }, () => Array.from({ length: 3 }, () => Cell()));
         }
 
         function printBoard() {
             board.forEach(row => {
-                // row.forEach(cell => console.log(cell.getToken()));
+                row.forEach(cell => console.log(cell, cell.getToken()));
             });
         }
 
@@ -76,9 +77,11 @@ export const game = () => {
     const game = (() => {
         let movesCounter = 0;
         const gameState = {
+            isStarted: false,
             isWin: false,
             isDraw: false,
             resetState() {
+                this.isStarted = false;
                 this.isDraw = false;
                 this.isWin = false;
             }
@@ -110,18 +113,20 @@ export const game = () => {
 
         function checkWinner() {
             movesCounter += 1;
-            const playerMoves = currentPlayer.getMoves().sort().join('');
+            const playerMoves = currentPlayer.getMoves();
             console.log(playerMoves)
-            if (playerMoves.length === 3) {
-                if (winCombinations.some(val => playerMoves === val)) {
-                    gameState.isWin = true;
-                }
-            } else if (movesCounter === 9) {
+            if (winCombinations.some(combination => combination.every(val => playerMoves.includes(val)))) {
+                gameState.isWin = true;
+            } else if (movesCounter === 9 && !gameState.isWin) {
                 gameState.isDraw = true;
             }
         }
 
         function playRound(x, y) {
+
+            if (!gameState.isStarted) {
+                return;
+            }
 
             console.log(`Dropping ${currentPlayer.name}'s marker into the ${x},${y} cell...`);
             currentPlayer.setMoves(x, y);
@@ -146,29 +151,45 @@ export const game = () => {
             return true;
         }
 
-        return { playRound, getCurrentPlayer };
+        function setStart() {
+            gameState.isStarted = true;
+        }
+
+        function getStart() {
+            return gameState.isStarted;
+        }
+
+        return { playRound, getCurrentPlayer, setStart, getStart };
     })();
 
     const gameRender = (() => {
 
         function playerClickRender(e) {
-            const marker = game.getCurrentPlayer().token === 0 ? 'o' : 'x';
-            e.target.textContent = marker;
-            if(!game.playRound(e.target.dataset.x, e.target.dataset.y)){
-                setTimeout(() => {
-                    boardRender();
-                }, 5000)
-            };
+
+            let isStart = game.getStart();
+            if (e.target.dataset.id === 'start' && !isStart) {
+                e.target.classList.add('click-off');
+                game.setStart();
+            } else if (isStart && e.target.dataset.x) {
+                const marker = game.getCurrentPlayer().token === 0 ? 'o' : 'x';
+                e.target.textContent = marker;
+                if (!game.playRound(e.target.dataset.x, e.target.dataset.y)) {
+                    setTimeout(() => {
+                        boardRender();
+                    }, 5000)
+                };
+            }
         }
 
         function boardRender() {
-            document.body.innerHTML = ''
-            const ul = document.createElement('ul');
+            const ul = document.querySelector('ul');
+            const startButton = document.querySelector('button[data-id="start"]');
 
-            const board = gameBoard.getBoard();
+            ul.innerHTML = '';
+            startButton.classList.remove('click-off');
 
-            for (let i = 0; i < board.length; i += 1) {
-                for (let j = 0; j < board.length; j += 1) {
+            for (let i = 0; i < 3; i += 1) {
+                for (let j = 0; j < 3; j += 1) {
                     const li = document.createElement('li');
                     const button = document.createElement('button');
                     button.dataset.x = i;
@@ -177,7 +198,6 @@ export const game = () => {
                     ul.appendChild(li);
                 }
             }
-            document.body.appendChild(ul);
         }
 
         return { boardRender, playerClickRender };

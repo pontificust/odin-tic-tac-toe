@@ -1,1 +1,1 @@
-export { game } from './game.js'
+export { game } from './game.js';
