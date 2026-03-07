@@ -36,6 +36,17 @@ export const game = () => {
 
     const markerIcons = [circleIcon, crossIcon];
 
+    const safeTransition = (callback) => {
+        if (!document.startViewTransition) {
+            callback();
+            return;
+        }
+
+        document.startViewTransition(() => {
+            callback();
+        });
+    }
+
     const Player = (name, token) => {
         let moves = [];
         let wins = 0;
@@ -121,9 +132,10 @@ export const game = () => {
                 this.isWin = false;
             }
         }
+        let message = '';
 
         const players = Array.from(Array(2), (x, idx) => Player(`player${idx}`, idx));
-        
+
         let currentPlayer = players[1];
 
         const gameStats = {
@@ -180,6 +192,11 @@ export const game = () => {
             return gameStats[marker];
         }
 
+        function getMessage() {
+            return message;
+        }
+
+
         function playRound(x, y) {
 
             if (!gameState.isStarted) {
@@ -199,10 +216,14 @@ export const game = () => {
                     console.log(`Dear, ${currentPlayer.name}, you win!`);
                     const marker = currentPlayer.token === 1 ? 'x' : 'o';
                     game.setWin(marker);
+                    message = `${currentPlayer.name} won!`.toUpperCase();
+                    currentPlayer.setWin();
                 } else if (isDraw) {
                     game.setDraw();
+                    message = "It's a draw!";
                     console.log("It's a draw!");
                 }
+
                 resetGame();
                 return false;
             }
@@ -220,7 +241,7 @@ export const game = () => {
             return gameState.isStarted;
         }
 
-        return { playRound, getCurrentPlayer, setStart, getStart, setDraw, getDraw, setWin, getWin, resetGame };
+        return { playRound, getCurrentPlayer, setStart, getStart, setDraw, getDraw, setWin, getWin, resetGame, getMessage };
     })();
 
     const gameRender = (() => {
@@ -228,6 +249,8 @@ export const game = () => {
         function playerClickRender(e) {
 
             console.log(e.target)
+            const ul = document.querySelector('.main__game-cells');
+            const ulBackground = document.querySelector('.main__game-background');
             let isStart = game.getStart();
             if (e.target.dataset.id === 'start' && !isStart) {
                 e.target.classList.add('click-off');
@@ -239,17 +262,22 @@ export const game = () => {
                 e.target.querySelector('svg').classList.add(marker);
                 if (!game.playRound(e.target.dataset.x, e.target.dataset.y)) {
                     setTimeout(() => {
-                        if (!document.startViewTransition) {
-                            boardRender();
-                            return;
-                        }
 
-                        document.startViewTransition(() => {
-                            boardRender();
+                        safeTransition(() => {
+                            ul.classList.add('hide');
+                            ulBackground.textContent = `${game.getMessage()}`;
                         });
-                    }, 5000)
+                        setTimeout(() => {
+
+                            safeTransition(() => {
+                                boardRender();
+                                ulBackground.textContent = '';
+                                ul.classList.remove('hide');
+                            });
+                        }, 5000);
+                    }, 3000);
                 };
-            } else if(e.target.dataset.id === 'reset' && isStart) {
+            } else if (e.target.dataset.id === 'reset' && isStart) {
                 game.resetGame();
                 boardRender();
             }
@@ -290,12 +318,7 @@ export const game = () => {
 
     document.addEventListener('click', (e) => {
 
-        if (!document.startViewTransition) {
-            gameRender.playerClickRender(e);
-            return;
-        }
-
-        document.startViewTransition(() => {
+        safeTransition(() => {
             gameRender.playerClickRender(e);
         });
     });
