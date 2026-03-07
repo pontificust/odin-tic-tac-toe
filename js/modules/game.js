@@ -220,7 +220,7 @@ export const game = () => {
             return gameState.isStarted;
         }
 
-        return { playRound, getCurrentPlayer, setStart, getStart, setDraw, getDraw, setWin, getWin };
+        return { playRound, getCurrentPlayer, setStart, getStart, setDraw, getDraw, setWin, getWin, resetGame };
     })();
 
     const gameRender = (() => {
@@ -249,6 +249,9 @@ export const game = () => {
                         });
                     }, 5000)
                 };
+            } else if(e.target.dataset.id === 'reset' && isStart) {
+                game.resetGame();
+                boardRender();
             }
         }
 
