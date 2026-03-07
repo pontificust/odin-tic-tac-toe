@@ -249,11 +249,15 @@ export const game = () => {
         function playerClickRender(e) {
 
             console.log(e.target)
+            const clickSound = document.querySelector('audio');
             const ul = document.querySelector('.main__game-cells');
+            const resetButton = document.querySelector('.main__game-button[data-id="reset"]');
             const ulBackground = document.querySelector('.main__game-background');
             let isStart = game.getStart();
             if (e.target.dataset.id === 'start' && !isStart) {
+                clickSound.play();
                 e.target.classList.add('click-off');
+                resetButton.classList.remove('click-off');
                 game.setStart();
             } else if (isStart && e.target.dataset.x) {
                 const markerIcon = markerIcons[game.getCurrentPlayer().token];
@@ -278,13 +282,16 @@ export const game = () => {
                     }, 3000);
                 };
             } else if (e.target.dataset.id === 'reset' && isStart) {
+                resetButton.classList.add('click-off');
                 game.resetGame();
+                clickSound.play();
                 boardRender();
             }
         }
 
         function boardRender() {
 
+            const resetButton = document.querySelector('.main__game-button[data-id="reset"]');
             const xScore = document.querySelector('span[data-id="x"]');
             const drawScore = document.querySelector('span[data-id="draw"]');
             const oScore = document.querySelector('span[data-id="o"]');
@@ -292,10 +299,12 @@ export const game = () => {
             const startButton = document.querySelector('button[data-id="start"]');
 
             ul.innerHTML = '';
+            ul.classList.add('borders');
             startButton.classList.remove('click-off');
             xScore.textContent = game.getWin('x');
             drawScore.textContent = game.getDraw();
             oScore.textContent = game.getWin('o');
+            resetButton.classList.add('click-off');
 
             for (let i = 0; i < 3; i += 1) {
                 for (let j = 0; j < 3; j += 1) {

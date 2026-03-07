@@ -595,8 +595,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 5rem;
+    font-size: 4rem;
     text-shadow: 0 0 20px #ff0000, 0 0 20px #ff0000;
+    font-family: 'Press Start 2P';
 }
 
 .main__game-cells-wrapper,
@@ -610,13 +611,26 @@ body {
     list-style: none;
     display: grid;
     grid-template: repeat(3, 100px) / repeat(3, 100px);
-    border-top: var(--border);
-    border-left: var(--border);
     opacity: 1;
     transition: all .4s;
 }
 
-.hide{
+.main__game-cell:nth-of-type(1) {
+    border-top: var(--border);
+    border-left: var(--border);
+}
+
+.main__game-cell:nth-of-type(2),
+.main__game-cell:nth-of-type(3) {
+    border-top: var(--border);
+}
+
+.main__game-cell:nth-of-type(4),
+.main__game-cell:nth-of-type(7)  {
+    border-left: var(--border);
+}
+
+.hide {
     opacity: 0;
 }
 
