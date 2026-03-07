@@ -192,6 +192,7 @@ export const game = () => {
 
         function playerClickRender(e) {
 
+            console.log(e.target)
             let isStart = game.getStart();
             if (e.target.dataset.id === 'start' && !isStart) {
                 e.target.classList.add('click-off');

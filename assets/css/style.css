@@ -508,7 +508,7 @@ html {
     --text-color: #FFB800;
     --circle-color: #008cff;
     --cross-color: #FF3D3D;
-    --circle-shadow-color:#0055FF;
+    --circle-shadow-color: #0055FF;
     --cross-shadow-color: #B30000;
     --border: 5px solid var(--border-color);
     --text-shadow-text: 0 0 10px var(--text-color);
@@ -565,6 +565,28 @@ body {
     display: flex;
     justify-content: center;
     transform: rotateX(30deg);
+    position: relative;
+}
+
+.main__game-background {
+    position: absolute;
+    background-color: transparent;
+    opacity: 0.8;
+    background-image: 
+        linear-gradient(#c9c5c550 1px, transparent 1px),
+        linear-gradient(to right, #c9c5c550 1px, transparent 1px);
+    background-size: 20px 20px;
+
+    box-shadow: 0px 1px 0px #c9c5c510,
+        0px 3px 0px #c9c5c510,
+        0px 5px 0px #c9c5c510,
+        0px 7px 0px #c9c5c510,
+        0px 10px 0px #c9c5c510;
+    top: -10px;
+    left: 0;
+    right: 0;
+    bottom: -30px;
+    z-index: -100;
 }
 
 .main__game-cells-wrapper,
@@ -590,6 +612,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    transform: translateZ(1px);
 }
 
 .main__game-cell-button:nth-of-type(1) {
@@ -608,22 +631,14 @@ body {
     pointer-events: none;
 }
 
-.main__game-cell-button .circle{
+.main__game-cell-button .circle {
     fill: var(--circle-color);
-    filter: drop-shadow(0px 1px 0px var(--circle-shadow-color))
-    drop-shadow(0px 2px 0px var(--circle-shadow-color))
-    drop-shadow(0px 3px 0px var(--circle-shadow-color))
-    drop-shadow(0px 4px 0px var(--circle-shadow-color))
-    drop-shadow(10px 10px 15px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0px 1px 0px var(--circle-shadow-color)) drop-shadow(0px 2px 0px var(--circle-shadow-color)) drop-shadow(0px 3px 0px var(--circle-shadow-color)) drop-shadow(0px 4px 0px var(--circle-shadow-color)) drop-shadow(10px 10px 15px rgba(0, 0, 0, 0.5));
     transform: translateZ(10px);
 }
 
 .main__game-cell-button .cross {
     stroke: var(--cross-color);
-    filter: drop-shadow(0px 1px 0px var(--cross-shadow-color))
-    drop-shadow(0px 2px 0px var(--cross-shadow-color))
-    drop-shadow(0px 3px 0px var(--cross-shadow-color))
-    drop-shadow(0px 4px 0px var(--cross-shadow-color))
-    drop-shadow(10px 10px 15px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0px 1px 0px var(--cross-shadow-color)) drop-shadow(0px 2px 0px var(--cross-shadow-color)) drop-shadow(0px 3px 0px var(--cross-shadow-color)) drop-shadow(0px 4px 0px var(--cross-shadow-color)) drop-shadow(10px 10px 15px rgba(0, 0, 0, 0.5));
     transform: translateZ(10px);
 }
