@@ -501,25 +501,129 @@ html {
     box-sizing: inherit;
 }
 
+:root {
+    --main-background-color: #0D0B1A;
+    --element-background-color: #1A1A2E;
+    --border-color: #00F2FF;
+    --text-color: #FFB800;
+    --circle-color: #008cff;
+    --cross-color: #FF3D3D;
+    --circle-shadow-color:#0055FF;
+    --cross-shadow-color: #B30000;
+    --border: 5px solid var(--border-color);
+    --text-shadow-text: 0 0 10px var(--text-color);
+}
+
 
 body {
+    width: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    background-color: var(--main-background-color);
 }
 
-ul {
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 40px;
+    perspective: 1000px;
+}
+
+.main__game-scores-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    font-family: 'Press Start 2P';
+}
+
+.main__game-score-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.main__game-player {
+    background-color: var(--element-background-color);
+    padding: 10px 20px;
+    text-shadow: var(--text-shadow-text);
+    font-size: 1.6rem;
+}
+
+.main__game-score {
+    background-color: var(--element-background-color);
+    text-shadow: var(--text-shadow-text);
+    padding: 5px 10px;
+}
+
+.main__game-cells-wrapper {
+    display: flex;
+    justify-content: center;
+    transform: rotateX(30deg);
+}
+
+.main__game-cells-wrapper,
+.main__game-cells,
+.main__game-cell,
+.main__game-cell-button {
+    transform-style: preserve-3d;
+}
+
+.main__game-cells {
     list-style: none;
     display: grid;
     grid-template: repeat(3, 100px) / repeat(3, 100px);
+    border-top: var(--border);
+    border-left: var(--border);
 }
 
-li button {
+.main__game-cell-button {
     width: 100%;
     height: 100%;
     font-size: 5rem;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.click-off{
+.main__game-cell-button:nth-of-type(1) {
+    border-bottom: var(--border);
+    border-right: var(--border);
+}
+
+.main__game-button {
+    color: var(--text-color);
+    background-color: var(--element-background-color);
+    text-shadow: var(--text-shadow-text);
+    font-family: 'Press Start 2P';
+}
+
+.click-off {
     pointer-events: none;
+}
+
+.main__game-cell-button .circle{
+    fill: var(--circle-color);
+    filter: drop-shadow(0px 1px 0px var(--circle-shadow-color))
+    drop-shadow(0px 2px 0px var(--circle-shadow-color))
+    drop-shadow(0px 3px 0px var(--circle-shadow-color))
+    drop-shadow(0px 4px 0px var(--circle-shadow-color))
+    drop-shadow(10px 10px 15px rgba(0, 0, 0, 0.5));
+    transform: translateZ(10px);
+}
+
+.main__game-cell-button .cross {
+    stroke: var(--cross-color);
+    filter: drop-shadow(0px 1px 0px var(--cross-shadow-color))
+    drop-shadow(0px 2px 0px var(--cross-shadow-color))
+    drop-shadow(0px 3px 0px var(--cross-shadow-color))
+    drop-shadow(0px 4px 0px var(--cross-shadow-color))
+    drop-shadow(10px 10px 15px rgba(0, 0, 0, 0.5));
+    transform: translateZ(10px);
 }

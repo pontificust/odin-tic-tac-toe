@@ -10,6 +10,32 @@ export const game = () => {
         [2, 4, 6]
     ];
 
+    const circleIcon = `<svg 
+    fill="none" 
+    width="80px" 
+    height="80px" 
+    viewBox="-2 -2 24 24" 
+    xmlns="http://www.w3.org/2000/svg" 
+    preserveAspectRatio="xMinYMin" >
+    <path d='M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0 2C4.477 20 0 15.523 0 10S4.477 0 10 0s10 4.477 10 10-4.477 10-10 10z'/>
+    </svg>`;
+
+    const crossIcon = `<svg
+    width="80px" 
+    height="80px"
+    viewBox="0 0 16 16" 
+    xmlns="http://www.w3.org/2000/svg" 
+    version="1.1" 
+    fill="none" 
+    stroke="none" 
+    stroke-linecap="round" 
+    stroke-linejoin="round" 
+    stroke-width="1.5">
+<path d="m11.25 4.75-6.5 6.5m0-6.5 6.5 6.5"/>
+</svg>`;
+
+    const markerIcons = [circleIcon, crossIcon];
+
     const Player = (name, token) => {
         let moves = [];
 
@@ -171,8 +197,10 @@ export const game = () => {
                 e.target.classList.add('click-off');
                 game.setStart();
             } else if (isStart && e.target.dataset.x) {
-                const marker = game.getCurrentPlayer().token === 0 ? 'o' : 'x';
-                e.target.textContent = marker;
+                const markerIcon = markerIcons[game.getCurrentPlayer().token];
+                const marker = game.getCurrentPlayer().token === 1 ? 'cross' : 'circle';
+                e.target.innerHTML = markerIcon;
+                e.target.querySelector('svg').classList.add(marker);
                 if (!game.playRound(e.target.dataset.x, e.target.dataset.y)) {
                     setTimeout(() => {
                         if (!document.startViewTransition) {
@@ -201,6 +229,8 @@ export const game = () => {
                     const button = document.createElement('button');
                     button.dataset.x = i;
                     button.dataset.y = j;
+                    button.classList.add('main__game-cell-button');
+                    li.classList.add('main__game-cell');
                     li.appendChild(button);
                     ul.appendChild(li);
                 }
