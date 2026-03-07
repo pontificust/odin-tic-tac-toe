@@ -548,6 +548,7 @@ body {
     align-items: center;
     gap: 5px;
     transform-style: preserve-3d;
+    position: relative;
 }
 
 .main__game-score-wrapper:nth-child(1),
@@ -560,8 +561,6 @@ body {
     background: linear-gradient(135deg, #22223b 0%, #1A1A2E 100%);
     padding: 15px 10px;
     font-size: 2rem;
-    transform: rotateX(-65deg);
-    transform: translateY(3px);
     box-shadow: 0px -5px 0px #1A1A2E50;
     border-radius: 10px;
 }
@@ -639,7 +638,7 @@ body {
     color: var(--text-color);
     background-color: var(--element-background-color);
     font-family: 'Press Start 2P';
-    transform: rotateX(25deg);
+    /* transform: translateZ(50px); */
     font-size: 2rem;
     padding: 15px 10px;
     border: 1px solid #00F2FF44;
@@ -649,9 +648,9 @@ body {
     background: linear-gradient(to bottom,
             #2A2A4E 0%,
             #1A1A2E 50%,
-            #121221 100%
-        );
+            #121221 100%);
     border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 5px;
 }
 
 .main__game-button[data-id="reset"] {
@@ -661,7 +660,7 @@ body {
 
 .main__game-button:hover,
 .main__game-button:active {
-    transform: translateY(10px) rotateX(25deg);
+    transform: translateY(10px);
     box-shadow: none;
     cursor: pointer;
 }

@@ -38,6 +38,7 @@ export const game = () => {
 
     const Player = (name, token) => {
         let moves = [];
+        let wins = 0;
 
         function setMoves(x, y) {
             moves.push(+x + +y * 3);
@@ -51,7 +52,15 @@ export const game = () => {
             moves = [];
         }
 
-        return { name, token, setMoves, getMoves, resetMoves };
+        function setWin() {
+            wins += 1;
+        }
+
+        function getWin() {
+            return wins;
+        }
+
+        return { name, token, setMoves, getMoves, resetMoves, setWin, getWin };
     }
 
 
@@ -112,9 +121,16 @@ export const game = () => {
                 this.isWin = false;
             }
         }
-        const players = Array.from(Array(2), (x, idx) => Player(`player${idx}`, idx));
 
+        const players = Array.from(Array(2), (x, idx) => Player(`player${idx}`, idx));
+        
         let currentPlayer = players[1];
+
+        const gameStats = {
+            draws: 0,
+            x: players[1].getWin(),
+            o: players[0].getWin(),
+        }
 
         function switchPlayer() {
             currentPlayer = currentPlayer === players[1] ? players[0] : players[1];
@@ -148,6 +164,22 @@ export const game = () => {
             }
         }
 
+        function setDraw() {
+            gameStats.draws += 1;
+        }
+
+        function getDraw() {
+            return gameStats.draws;
+        }
+
+        function setWin(marker) {
+            gameStats[marker] += 1;
+        }
+
+        function getWin(marker) {
+            return gameStats[marker];
+        }
+
         function playRound(x, y) {
 
             if (!gameState.isStarted) {
@@ -165,7 +197,10 @@ export const game = () => {
             if (isWin || isDraw) {
                 if (isWin) {
                     console.log(`Dear, ${currentPlayer.name}, you win!`);
+                    const marker = currentPlayer.token === 1 ? 'x' : 'o';
+                    game.setWin(marker);
                 } else if (isDraw) {
+                    game.setDraw();
                     console.log("It's a draw!");
                 }
                 resetGame();
@@ -185,7 +220,7 @@ export const game = () => {
             return gameState.isStarted;
         }
 
-        return { playRound, getCurrentPlayer, setStart, getStart };
+        return { playRound, getCurrentPlayer, setStart, getStart, setDraw, getDraw, setWin, getWin };
     })();
 
     const gameRender = (() => {
@@ -218,11 +253,18 @@ export const game = () => {
         }
 
         function boardRender() {
+
+            const xScore = document.querySelector('span[data-id="x"]');
+            const drawScore = document.querySelector('span[data-id="draw"]');
+            const oScore = document.querySelector('span[data-id="o"]');
             const ul = document.querySelector('ul');
             const startButton = document.querySelector('button[data-id="start"]');
 
             ul.innerHTML = '';
             startButton.classList.remove('click-off');
+            xScore.textContent = game.getWin('x');
+            drawScore.textContent = game.getDraw();
+            oScore.textContent = game.getWin('o');
 
             for (let i = 0; i < 3; i += 1) {
                 for (let j = 0; j < 3; j += 1) {
